@@ -47,7 +47,7 @@ export const GerenciadorDepartamentosSelecionados = () => {
             }
             onClick={
               view.departamentoFoiSelecionado(departamento.codigo)
-                ? () => view.adicionarDepartamento(departamento.codigo)
+                ? () => view.removerDepartamento(departamento.codigo)
                 : () => view.adicionarDepartamento(departamento.codigo)
             }
           >
