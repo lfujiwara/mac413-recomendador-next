@@ -6,9 +6,14 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "run": "tsc index.ts"
   },
   "dependencies": {
+    "@chakra-ui/react": "^1.6.9",
+    "@emotion/react": "^11",
+    "@emotion/styled": "^11",
+    "framer-motion": "^4",
     "next": "11.1.2",
     "react": "17.0.2",
     "react-dom": "17.0.2"
@@ -17,6 +22,7 @@
     "@types/react": "17.0.27",
     "eslint": "8.0.0",
     "eslint-config-next": "11.1.2",
+    "ts-node": "^10.3.0",
     "typescript": "4.4.3"
   }
 }
