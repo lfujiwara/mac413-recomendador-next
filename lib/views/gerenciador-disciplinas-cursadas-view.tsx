@@ -26,6 +26,24 @@ export const GerenciadorDisciplinasCursadasViewProvider = ({
 }: {
   children?: any;
 }) => {
+  let localStorageManager: { get: any; dump: any };
+  if (typeof window !== "undefined") {
+    localStorageManager = {
+      dump: (data: any) => {
+        localStorage.setItem("disciplinasCursadas", JSON.stringify(data));
+      },
+      get: () =>
+        JSON.parse(
+          localStorage.getItem("disciplinasCursadas") || "[]"
+        ) as any[],
+    };
+  } else {
+    localStorageManager = {
+      dump: () => {},
+      get: () => [],
+    };
+  }
+
   const [state, setState] = React.useState<
     Omit<
       GerenciadorDisciplinasCursadasView,
@@ -35,7 +53,7 @@ export const GerenciadorDisciplinasCursadasViewProvider = ({
     >
   >({
     disciplinasAExibir: db.disciplinas,
-    disciplinasCursadas: [],
+    disciplinasCursadas: localStorageManager.get(),
     termoDeBuscaDisciplinas: "",
     disciplinaFoiCursada: () => false,
   });
@@ -84,6 +102,7 @@ export const GerenciadorDisciplinasCursadasViewProvider = ({
 
   useEffect(() => {
     const set = new Set<string>(state.disciplinasCursadas.map((d) => d.codigo));
+    localStorageManager.dump(state.disciplinasCursadas);
     setState({
       ...state,
       disciplinaFoiCursada: (codigo: string) => set.has(codigo),

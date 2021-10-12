@@ -24,6 +24,24 @@ export const GerenciadorDepartamentosViewProvider = ({
 }: {
   children?: any;
 }) => {
+  let localStorageManager: { get: any; dump: any };
+  if (typeof window !== "undefined") {
+    localStorageManager = {
+      dump: (data: any) => {
+        localStorage.setItem("departamentosSelecionados", JSON.stringify(data));
+      },
+      get: () =>
+        JSON.parse(
+          localStorage.getItem("departamentosSelecionados") || "[]"
+        ) as any[],
+    };
+  } else {
+    localStorageManager = {
+      dump: () => {},
+      get: () => [],
+    };
+  }
+
   type StateType = Omit<
     GerenciadorDepartamentosView,
     | "atualizarTermoDeBuscaDepartamentos"
@@ -33,7 +51,7 @@ export const GerenciadorDepartamentosViewProvider = ({
   const [state, setState] = React.useState<StateType>({
     departamentoFoiSelecionado: () => false,
     termoDeBuscaDepartamentos: "",
-    departamentosSelecionados: [],
+    departamentosSelecionados: localStorageManager.get(),
     departamentosAExibir: db.departamentos,
   });
 
@@ -79,6 +97,7 @@ export const GerenciadorDepartamentosViewProvider = ({
 
   React.useEffect(() => {
     const set = new Set(state.departamentosSelecionados.map((d) => d.codigo));
+    localStorageManager.dump(state.departamentosSelecionados);
     setState({
       ...state,
       departamentoFoiSelecionado: (codigo) => set.has(codigo),
